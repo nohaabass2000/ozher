@@ -1,0 +1,757 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FFF7FA">
+  <meta name="description" content="أُزهر — مساحتك اليومية للنمو والتركيز والإنجاز.">
+  <title>أُزهر | وقتكِ يزهر بإنجازكِ</title>
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --rose: #C2597E;
+      --pink: #F3A6B8;
+      --purple: #9B8BC4;
+      --yellow: #F6D77A;
+      --mint: #9DD8C0;
+      --plum: #4B3644;
+      --cream: #FFF7FA;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      color: var(--plum);
+      background: radial-gradient(circle at top right, #FFFBFD, #FFF4F8 55%, #F8ECF5);
+      overflow-x: hidden;
+    }
+
+    button, input, textarea { touch-action: manipulation; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 3px solid #9B8BC4;
+      outline-offset: 3px;
+    }
+
+    .btn-3d {
+      min-height: 44px;
+      box-shadow: 0 4px 0 rgba(130,74,102,.16);
+      transition: transform .14s ease, box-shadow .14s ease;
+    }
+    .btn-3d:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(130,74,102,.16);
+    }
+
+    .card-soft {
+      background: rgba(255,255,255,.96);
+      border: 2px solid #F4DCE6;
+      box-shadow: 0 10px 28px rgba(194,89,126,.08);
+    }
+
+    .progress-ring-circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset .35s linear, stroke .3s ease;
+    }
+
+    .pulse-dot { animation: pulse 1.6s infinite ease-in-out; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(1.2); }
+    }
+
+    .modal-pop { animation: pop .2s ease-out; }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen py-4 px-3 sm:py-6 sm:px-6">
+
+  <!-- شاشة الترحيب -->
+  <section id="welcomeScreen" class="min-h-[85vh] flex items-center justify-center px-2">
+    <div class="card-soft rounded-3xl p-6 sm:p-8 max-w-md w-full text-center space-y-5">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-[#FDF0F5] border-2 border-[#F3A6B8] flex items-center justify-center text-3xl">
+        🌷
+      </div>
+
+      <div class="space-y-2">
+        <h1 class="text-3xl font-extrabold text-[#C2597E]">أُزهر</h1>
+        <p class="text-sm font-bold text-[#9B8BC4]">وقتكِ يزهر بإنجازكِ</p>
+        <p class="text-sm text-[#7A6170] leading-relaxed">
+          مساحتكِ اليومية للنمو والتركيز والإنجاز.
+          ابدئي بخطوة صغيرة، واتركي لبذور جهدكِ فرصة أن تزهر.
+        </p>
+      </div>
+
+      <form id="welcomeForm" class="space-y-3 text-right">
+        <label for="nameInput" class="block text-xs font-bold pr-1">ما الاسم الذي تحبين أن نناديكِ به؟</label>
+        <input id="nameInput" type="text" maxlength="30" required
+          placeholder="اكتبي اسمكِ هنا"
+          class="w-full rounded-2xl border-2 border-[#F2D8E3] bg-[#FFFBFD] px-4 py-3 text-base text-center font-semibold focus:outline-none focus:border-[#C2597E]">
+        <button class="btn-3d w-full py-3 rounded-2xl font-extrabold bg-[#C2597E] text-white border border-[#A44466]">
+          ابدئي رحلتكِ مع أُزهر ✨
+        </button>
+      </form>
+      <p class="text-[11px] text-[#9A8491]">بياناتكِ محفوظة على هذا الجهاز.</p>
+    </div>
+  </section>
+
+  <!-- التطبيق -->
+  <div id="appContainer" class="max-w-5xl mx-auto space-y-4 sm:space-y-5 hidden">
+
+    <header class="card-soft rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <h1 class="text-2xl font-extrabold text-[#C2597E]">🌸 أُزهر</h1>
+          <span id="liveStatusBadge" class="hidden items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#FCECF2] text-[#A44466] border border-[#F3A6B8]">
+            <span class="w-2 h-2 rounded-full bg-[#C2597E] pulse-dot"></span>
+            جلسة نشطة
+          </span>
+        </div>
+        <p id="greetingText" class="text-xs sm:text-sm font-semibold text-[#7A6170] mt-1"></p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <span id="streakBadge" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#FFF3D6] text-[#7D5B00] border border-[#F6D77A]">
+          ✨ جلسات اليوم: 0
+        </span>
+        <button id="soundToggleBtn" type="button" class="btn-3d px-3 py-2 rounded-xl text-xs font-bold bg-[#FDF0F5] text-[#A44466] border border-[#F3A6B8]">
+          🔔 الصوت: مفعل
+        </button>
+        <button id="editNameBtn" type="button" class="btn-3d px-3 py-2 rounded-xl text-xs font-bold bg-[#F3EEF9] text-[#614E8E] border border-[#C8BCE4]">
+          ✏️ الاسم
+        </button>
+      </div>
+    </header>
+
+    <!-- رسالة اليوم -->
+    <section class="rounded-3xl p-4 sm:p-5 bg-gradient-to-l from-[#FDF0F5] via-[#FFFBFD] to-[#F4EFFB] border-2 border-[#F1D8E4] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-white border border-[#F1D8E4] flex items-center justify-center text-xl shrink-0">🦋</div>
+        <div>
+          <span class="text-[11px] font-extrabold text-[#9B8BC4]">همسة أُزهر</span>
+          <p id="motivationText" class="text-sm sm:text-base font-bold text-[#4B3644] leading-relaxed mt-1"></p>
+        </div>
+      </div>
+      <button id="newQuoteBtn" type="button" class="btn-3d px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-[#C2597E] border border-[#F3A6B8]">
+        ✨ رسالة أخرى
+      </button>
+    </section>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
+
+      <!-- المؤقت -->
+      <section class="lg:col-span-7 card-soft rounded-3xl p-4 sm:p-6 flex flex-col items-center">
+
+        <div class="w-full mb-4">
+          <p class="text-center text-xs font-bold text-[#7A6170] mb-2">اختاري المساحة التي تناسب يومكِ</p>
+          <div class="grid grid-cols-3 gap-2 bg-[#FFF7FA] p-1.5 rounded-2xl border border-[#F4DCE6]">
+            <button id="mode20Btn" type="button" class="mode-btn rounded-xl py-2.5 text-xs sm:text-sm font-bold">20 دقيقة</button>
+            <button id="mode40Btn" type="button" class="mode-btn rounded-xl py-2.5 text-xs sm:text-sm font-bold">40 دقيقة</button>
+            <button id="mode60Btn" type="button" class="mode-btn rounded-xl py-2.5 text-xs sm:text-sm font-bold">60 دقيقة</button>
+          </div>
+        </div>
+
+        <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div id="phaseBadge" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#FCECF2] text-[#A44466] border border-[#F3A6B8]"></div>
+          <span id="finishTimeBadge" class="text-xs font-bold text-[#7A6170] bg-[#FFF7FA] px-3 py-1.5 rounded-full border border-[#F4DCE6]"></span>
+        </div>
+
+        <div class="relative w-52 h-52 sm:w-60 sm:h-60 flex items-center justify-center mb-4">
+          <svg class="w-full h-full" viewBox="0 0 220 220" aria-hidden="true">
+            <circle cx="110" cy="110" r="96" fill="none" stroke="#F7E8EF" stroke-width="14"></circle>
+            <circle id="progressRing" class="progress-ring-circle" cx="110" cy="110" r="96" fill="none" stroke="#C2597E" stroke-width="14" stroke-linecap="round" stroke-dasharray="603.19" stroke-dashoffset="0"></circle>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-5">
+            <span id="timerDisplay" class="text-4xl sm:text-5xl font-extrabold tracking-wider text-[#4B3644]" dir="ltr" aria-live="off">05:00</span>
+            <span id="phaseHint" class="text-xs text-[#7A6170] mt-1.5 leading-relaxed"></span>
+          </div>
+        </div>
+
+        <div class="w-full mb-5">
+          <div class="flex items-center justify-between text-[11px] font-bold text-[#7A6170] mb-1">
+            <span>التقدم في الجلسة</span>
+            <span id="overallPercentText">0%</span>
+          </div>
+          <div class="w-full h-2.5 bg-[#F7E8EF] rounded-full overflow-hidden">
+            <div id="overallProgressBar" class="h-full bg-gradient-to-l from-[#C2597E] via-[#F3A6B8] to-[#9B8BC4] rounded-full" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full mb-5">
+          <button id="startPauseBtn" type="button" class="btn-3d px-4 py-3 rounded-2xl font-bold text-sm bg-[#F3A6B8] text-[#6B1D3B] border border-[#E0879C]">
+            ▶ ابدئي الآن
+          </button>
+          <button id="nextPhaseBtn" type="button" class="btn-3d px-4 py-3 rounded-2xl font-bold text-sm bg-[#F3EEF9] text-[#5B4787] border border-[#C8BCE4]">
+            ⏭ المرحلة التالية
+          </button>
+          <button id="resetTimerBtn" type="button" class="btn-3d px-4 py-3 rounded-2xl font-bold text-sm bg-[#EBF7F2] text-[#1D6B4F] border border-[#9DD8C0]">
+            ↺ إعادة
+          </button>
+        </div>
+
+        <div id="phasesBar" class="w-full grid gap-1.5 text-center"></div>
+        <p class="text-[11px] text-[#9A8491] mt-4 text-center">
+          يمكنكِ إيقاف الجلسة والعودة إليها في أي وقت.
+        </p>
+      </section>
+
+      <!-- المهام والملاحظات -->
+      <section class="lg:col-span-5 flex flex-col gap-4 sm:gap-5">
+
+        <div class="card-soft rounded-3xl p-4 sm:p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-base font-extrabold text-[#C2597E]">📝 مهام اليوم</h2>
+            <span id="taskCounter" class="text-xs font-bold px-2.5 py-1 rounded-full bg-[#F3EEF9] text-[#614E8E]">0 / 0</span>
+          </div>
+
+          <form id="addTaskForm" class="flex gap-2 mb-4">
+            <input id="taskInput" type="text" maxlength="120" placeholder="أضيفي مهمة صغيرة..."
+              class="flex-1 min-w-0 rounded-xl border-2 border-[#F2D8E3] bg-[#FFFBFD] px-3 py-2.5 text-base sm:text-sm focus:outline-none focus:border-[#C2597E]">
+            <button type="submit" class="btn-3d px-4 py-2 rounded-xl font-bold text-sm bg-[#F6D77A] text-[#5C4400] border border-[#E5C056]">+ إضافة</button>
+          </form>
+
+          <ul id="taskList" class="space-y-2 flex-1 max-h-64 overflow-y-auto"></ul>
+
+          <div class="mt-3 pt-3 border-t border-[#F7E8EF] flex items-center justify-between text-xs">
+            <span class="text-[#7A6170]">كل خطوة صغيرة تستحق التقدير</span>
+            <button id="clearDoneBtn" type="button" class="text-[#9B8BC4] font-bold underline py-1">مسح المنجزة</button>
+          </div>
+        </div>
+
+        <div class="card-soft rounded-3xl p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-base font-extrabold text-[#9B8BC4]">🌺 إنجازي اليوم</h2>
+            <span id="noteSavedStatus" class="text-xs text-[#2D7A5E] font-semibold opacity-0">تم الحفظ ✓</span>
+          </div>
+          <textarea id="winNoteInput" rows="3" maxlength="1000"
+            placeholder="ما الشيء الذي أنجزتِه اليوم وتحبين تذكّر نفسكِ به؟"
+            class="w-full rounded-xl border-2 border-[#F2D8E3] bg-[#FFFBFD] p-3 text-base sm:text-sm focus:outline-none focus:border-[#9B8BC4] resize-y mb-3"></textarea>
+          <button id="copySummaryBtn" type="button" class="btn-3d w-full py-2.5 px-4 rounded-2xl font-bold text-sm bg-[#F3EEF9] text-[#554282] border border-[#C8BCE4]">
+            📋 نسخ ملخص يومي
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- سجل الأيام -->
+    <section class="card-soft rounded-3xl p-4 sm:p-5">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div>
+          <h2 class="text-lg font-extrabold text-[#C2597E]">🌱 سجل أُزهر</h2>
+          <p class="text-xs text-[#7A6170]">خطواتكِ الصغيرة تصنع أثرًا جميلًا مع الوقت.</p>
+        </div>
+        <span class="text-xs font-bold text-[#9B8BC4]">آخر 7 أيام</span>
+      </div>
+      <div id="historyList" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+    </section>
+
+    <footer class="text-center text-xs text-[#9A8491] py-3">
+      أُزهر — وقتكِ يزهر بإنجازكِ 🌷
+    </footer>
+
+    <!-- نافذة الرسائل -->
+    <div id="motivationModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#3B2330]/40 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-pop bg-white border-2 border-[#F3A6B8] rounded-3xl p-6 max-w-md w-full text-center shadow-2xl space-y-4">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-[#FDF0F5] border-2 border-[#F3A6B8] flex items-center justify-center text-3xl">🌸</div>
+        <span id="modalPhaseLabel" class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-[#F3EEF9] text-[#614E8E]">رسالة أُزهر</span>
+        <h2 id="modalTitle" class="text-xl font-extrabold text-[#C2597E]">تذكّري</h2>
+        <p id="modalQuoteText" class="text-base font-bold text-[#4B3644] leading-relaxed bg-[#FFF7FA] p-4 rounded-2xl border border-[#F4DCE6]"></p>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button id="dismissModalBtn" type="button" class="btn-3d flex-1 py-3 rounded-2xl font-extrabold text-sm bg-[#C2597E] text-white border border-[#A44466]">حسنًا، لنكمل 🌷</button>
+          <button id="modalNextQuoteBtn" type="button" class="btn-3d py-3 px-4 rounded-2xl font-bold text-sm bg-[#FDF0F5] text-[#A44466] border border-[#F3A6B8]">رسالة أخرى</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastBanner" role="status" aria-live="polite"
+      class="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-[90vw] text-center px-5 py-2.5 rounded-2xl bg-[#C2597E] text-white text-sm font-bold shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-[60]">
+    </div>
+  </div>
+
+<script>
+(() => {
+  'use strict';
+
+  const STORAGE_KEY = 'ozhar_app_v1';
+  const CIRCUMFERENCE = 2 * Math.PI * 96;
+
+  const MODES = {
+    20: [
+      { name: 'جولة التركيز', minutes: 15, hint: 'اختاري مهمة واحدة وابدئي بها', color: '#C2597E' },
+      { name: 'تدوين الإنجاز', minutes: 5, hint: 'اكتبي ما أنجزتِه واحتفي بخطوتكِ', color: '#9DD8C0' }
+    ],
+    40: [
+      { name: 'التجهيز وتحديد الهدف', minutes: 5, hint: 'اختاري هدفًا واضحًا لهذه الجلسة', color: '#F3A6B8' },
+      { name: 'جولة التركيز الأولى', minutes: 15, hint: 'ابدئي بأهم خطوة بهدوء', color: '#C2597E' },
+      { name: 'استراحة قصيرة', minutes: 5, hint: 'تحركي قليلًا واشربي الماء', color: '#9DD8C0' },
+      { name: 'جولة التركيز الثانية', minutes: 10, hint: 'أكملي ما بدأتِه دون استعجال', color: '#9B8BC4' },
+      { name: 'تدوين الإنجاز', minutes: 5, hint: 'سجلي خطوتكِ الجميلة اليوم', color: '#F6D77A' }
+    ],
+    60: [
+      { name: 'التجهيز وتحديد الهدف', minutes: 5, hint: 'اختاري مهمة واحدة وأبعدي المشتتات', color: '#F3A6B8' },
+      { name: 'جولة التركيز الأولى', minutes: 25, hint: 'ابدئي بأهم خطوة بتركيز هادئ', color: '#C2597E' },
+      { name: 'استراحة قصيرة', minutes: 5, hint: 'تمددي قليلًا وخذي استراحة لطيفة', color: '#9DD8C0' },
+      { name: 'جولة التركيز الثانية', minutes: 20, hint: 'أكملي الجزء المتبقي براحة', color: '#9B8BC4' },
+      { name: 'تدوين الإنجاز', minutes: 5, hint: 'اكتبي سطرًا عن إنجازكِ', color: '#F6D77A' }
+    ]
+  };
+
+  const QUOTES = [
+    'لا يُطلب منكِ الكمال اليوم، يكفي أن تتحركي خطوة واحدة للأمام.',
+    'البداية الصغيرة خير من انتظار الوقت المثالي.',
+    'إنجازكِ ليس سباقًا مع أحد؛ إنه وعد لطيف تقطعينه لنفسكِ.',
+    'القليل المستمر يصنع أثرًا كبيرًا دون إرهاق.',
+    'امنحي نفسكِ فرصة للتركيز، وارفقي بها حين تحتاج إلى الراحة.',
+    'كل خطوة صادقة تستحق أن تحتفي بها.'
+  ];
+
+  const DEFAULT_TASKS = [
+    { id: 'welcome-1', text: 'تحديد هدف واحد لليوم', done: false },
+    { id: 'welcome-2', text: 'البدء بأهم خطوة', done: false },
+    { id: 'welcome-3', text: 'تدوين إنجاز اليوم', done: false }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const todayKey = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  };
+
+  let data = {
+    userName: '',
+    soundEnabled: true,
+    mode: 60,
+    phaseIndex: 0,
+    isRunning: false,
+    endAt: null,
+    pausedRemaining: 300,
+    quoteIndex: 0,
+    currentDay: todayKey(),
+    days: {}
+  };
+
+  let audioCtx = null;
+  let intervalId = null;
+  let toastTimeout = null;
+  let noteTimeout = null;
+
+  function newDayRecord() {
+    return { sessions: 0, completed: [], tasks: DEFAULT_TASKS.map(t => ({...t})), note: '' };
+  }
+
+  function getDay(key = todayKey()) {
+    if (!data.days[key]) data.days[key] = newDayRecord();
+    return data.days[key];
+  }
+
+  function currentDay() {
+    return getDay(data.currentDay);
+  }
+
+  function totalModeSeconds(mode = data.mode) {
+    return MODES[mode].reduce((sum, p) => sum + p.minutes * 60, 0);
+  }
+
+  function phaseSeconds() {
+    return MODES[data.mode][data.phaseIndex].minutes * 60;
+  }
+
+  function remainingSeconds() {
+    if (data.isRunning && data.endAt) {
+      return Math.max(0, Math.ceil((data.endAt - Date.now()) / 1000));
+    }
+    return Math.max(0, data.pausedRemaining);
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (err) {
+      console.warn('تعذر حفظ البيانات على هذا الجهاز.', err);
+    }
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved && typeof saved === 'object') {
+          data = {...data, ...saved};
+          if (![20,40,60].includes(Number(data.mode))) data.mode = 60;
+          data.mode = Number(data.mode);
+          if (!data.days || typeof data.days !== 'object') data.days = {};
+          if (!Number.isInteger(data.phaseIndex) || data.phaseIndex < 0 || data.phaseIndex >= MODES[data.mode].length) data.phaseIndex = 0;
+          if (typeof data.soundEnabled !== 'boolean') data.soundEnabled = true;
+        }
+      } else {
+        // استيراد الاسم والبيانات البسيطة من النسخة القديمة إن وجدت
+        const old = localStorage.getItem('noha_achievement_hour_v2') ||
+                    localStorage.getItem('noha_achievement_hour_v1');
+        if (old) {
+          const legacy = JSON.parse(old);
+          if (legacy.userName) data.userName = legacy.userName;
+          if (Array.isArray(legacy.tasks)) getDay().tasks = legacy.tasks;
+          if (legacy.winNote) getDay().note = legacy.winNote;
+          if (typeof legacy.soundEnabled === 'boolean') data.soundEnabled = legacy.soundEnabled;
+        }
+      }
+    } catch (err) {
+      console.warn('تعذر قراءة البيانات المحفوظة.', err);
+    }
+
+    if (!data.currentDay) data.currentDay = todayKey();
+    getDay();
+    data.currentDay = todayKey();
+    getDay();
+
+    // الاحتفاظ بآخر 120 يومًا فقط لتخفيف حجم التخزين
+    const keys = Object.keys(data.days).sort();
+    keys.slice(0, Math.max(0, keys.length - 120)).forEach(k => delete data.days[k]);
+
+    save();
+  }
+
+  function refreshDay() {
+    const key = todayKey();
+    if (key !== data.currentDay) {
+      data.currentDay = key;
+      getDay();
+      save();
+      renderTasks();
+      renderNote();
+      renderHistory();
+      renderTimer();
+    }
+  }
+
+  function formatTime(seconds) {
+    seconds = Math.max(0, Math.floor(seconds));
+    return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;
+  }
+
+  function safeText(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[char]));
+  }
+
+  function showToast(message) {
+    $('toastBanner').textContent = message;
+    $('toastBanner').classList.remove('opacity-0');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => $('toastBanner').classList.add('opacity-0'), 2800);
+  }
+
+  function playTone(frequencies = [587.33, 783.99]) {
+    if (!data.soundEnabled) return;
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const now = audioCtx.currentTime;
+      frequencies.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const start = now + i * .13;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(.001, start);
+        gain.gain.exponentialRampToValueAtTime(.10, start + .025);
+        gain.gain.exponentialRampToValueAtTime(.001, start + .28);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(start);
+        osc.stop(start + .3);
+      });
+    } catch (err) {}
+  }
+
+  function getQuote() {
+    return QUOTES[data.quoteIndex % QUOTES.length];
+  }
+
+  function renderPersonalization() {
+    const name = data.userName.trim() || 'مبدعة';
+    $('greetingText').textContent = `أهلًا بكِ يا ${name} 🌸 — مساحتكِ اليوم للنمو والإنجاز الهادئ`;
+    $('motivationText').textContent = getQuote();
+    $('modalQuoteText').textContent = getQuote();
+  }
+
+  function openModal(label = 'رسالة أُزهر') {
+    $('modalPhaseLabel').textContent = label;
+    renderPersonalization();
+    $('motivationModal').classList.remove('hidden');
+    $('motivationModal').classList.add('flex');
+    $('dismissModalBtn').focus();
+  }
+
+  function closeModal() {
+    $('motivationModal').classList.add('hidden');
+    $('motivationModal').classList.remove('flex');
+  }
+
+  function showApp() {
+    $('welcomeScreen').classList.add('hidden');
+    $('appContainer').classList.remove('hidden');
+    renderPersonalization();
+  }
+
+  function renderModeButtons() {
+    [20,40,60].forEach(mode => {
+      const btn = $(`mode${mode}Btn`);
+      const active = data.mode === mode;
+      btn.className = 'mode-btn rounded-xl py-2.5 text-xs sm:text-sm font-bold ' +
+        (active ? 'bg-[#C2597E] text-white shadow-sm' : 'text-[#4B3644] hover:bg-white');
+    });
+  }
+
+  function renderTimer() {
+    const phases = MODES[data.mode];
+    const current = phases[data.phaseIndex];
+    const left = remainingSeconds();
+    const progress = current.minutes * 60 ? left / (current.minutes * 60) : 0;
+
+    $('progressRing').style.strokeDasharray = CIRCUMFERENCE.toFixed(2);
+    $('progressRing').style.strokeDashoffset = (CIRCUMFERENCE * (1-progress)).toFixed(2);
+    $('progressRing').style.stroke = current.color;
+    $('timerDisplay').textContent = formatTime(left);
+    $('phaseBadge').textContent = `المرحلة ${data.phaseIndex+1} من ${phases.length}: ${current.name}`;
+    $('phaseHint').textContent = current.hint;
+
+    let remainingTotal = left;
+    for (let i = data.phaseIndex + 1; i < phases.length; i++) {
+      remainingTotal += phases[i].minutes * 60;
+    }
+
+    const total = totalModeSeconds();
+    const elapsed = Math.max(0, total - remainingTotal);
+    const percent = Math.min(100, Math.round(elapsed / total * 100));
+    $('overallProgressBar').style.width = `${percent}%`;
+    $('overallPercentText').textContent = `${percent}%`;
+
+    const end = data.isRunning && data.endAt
+      ? new Date(data.endAt + (remainingTotal - left) * 1000)
+      : new Date(Date.now() + remainingTotal * 1000);
+
+    $('finishTimeBadge').textContent = '🕒 الانتهاء المتوقع: ' + end.toLocaleTimeString('ar-EG', {
+      hour:'2-digit', minute:'2-digit'
+    });
+
+    $('startPauseBtn').textContent = data.isRunning ? '⏸ إيقاف مؤقت' : '▶ ابدئي الآن';
+    $('liveStatusBadge').classList.toggle('hidden', !data.isRunning);
+    $('liveStatusBadge').classList.toggle('inline-flex', data.isRunning);
+    $('streakBadge').textContent = `✨ جلسات اليوم: ${currentDay().sessions}`;
+    $('soundToggleBtn').textContent = data.soundEnabled ? '🔔 الصوت: مفعل' : '🔕 الصوت: صامت';
+
+    renderModeButtons();
+
+    $('phasesBar').className = `w-full grid gap-1.5 text-center ${phases.length === 2 ? 'grid-cols-2' : 'grid-cols-5'}`;
+    $('phasesBar').innerHTML = phases.map((p, index) => {
+      const active = index === data.phaseIndex;
+      const done = index < data.phaseIndex;
+      const cls = active
+        ? 'bg-[#FCECF2] border-[#C2597E] text-[#A44466]'
+        : done
+          ? 'bg-[#EBF7F2] border-[#9DD8C0] text-[#1D6B4F]'
+          : 'bg-[#FFF7FA] border-[#F4DCE6] text-[#8E7383]';
+      return `<button type="button" data-phase="${index}" class="rounded-xl py-2 px-1 text-xs font-bold border ${cls}" aria-label="الانتقال إلى ${safeText(p.name)}">${p.minutes} د</button>`;
+    }).join('');
+  }
+
+  function pauseTimer() {
+    if (!data.isRunning) return;
+    data.pausedRemaining = remainingSeconds();
+    data.isRunning = false;
+    data.endAt = null;
+    clearInterval(intervalId);
+    intervalId = null;
+    save();
+    renderTimer();
+  }
+
+  function startTimer() {
+    if (data.isRunning) return;
+    if (remainingSeconds() <= 0) data.pausedRemaining = phaseSeconds();
+    data.isRunning = true;
+    data.endAt = Date.now() + data.pausedRemaining * 1000;
+    save();
+    playTone();
+    renderTimer();
+    startTicker();
+  }
+
+  function startTicker() {
+    clearInterval(intervalId);
+    intervalId = setInterval(() => {
+      refreshDay();
+      reconcileTimer();
+      renderTimer();
+    }, 250);
+  }
+
+  function completeSession() {
+    const record = currentDay();
+    record.sessions += 1;
+    record.completed.unshift({
+      mode: data.mode,
+      date: new Date().toISOString()
+    });
+    record.completed = record.completed.slice(0, 50);
+
+    data.isRunning = false;
+    data.endAt = null;
+    data.phaseIndex = 0;
+    data.pausedRemaining = phaseSeconds();
+    clearInterval(intervalId);
+    intervalId = null;
+
+    save();
+    playTone([523.25,659.25,783.99]);
+    renderTimer();
+    renderHistory();
+
+    const label = data.mode === 20 ? '20 دقيقة' : data.mode === 40 ? '40 دقيقة' : 'ساعة كاملة';
+    showToast(`أحسنتِ! أتممتِ جلسة ${label}. كل خطوة تستحق الاحتفاء 🌸`);
+    openModal('أتممتِ جلستكِ بنجاح');
+  }
+
+  // يعالج مرور الوقت حتى لو كان المتصفح في الخلفية
+  function reconcileTimer() {
+    if (!data.isRunning || !data.endAt) return;
+
+    let now = Date.now();
+    let guard = 0;
+
+    while (data.isRunning && data.endAt <= now && guard < 12) {
+      guard++;
+      const oldEnd = data.endAt;
+      const phases = MODES[data.mode];
+
+      if (data.phaseIndex < phases.length - 1) {
+        data.phaseIndex++;
+        data.pausedRemaining = phases[data.phaseIndex].minutes * 60;
+        data.endAt = oldEnd + data.pausedRemaining * 1000;
+        playTone([659.25,783.99]);
+      } else {
+        completeSession();
+        return;
+      }
+    }
+
+    if (data.isRunning) {
+      data.pausedRemaining = remainingSeconds();
+      save();
+    }
+  }
+
+  function toggleTimer() {
+    if (data.isRunning) pauseTimer();
+    else startTimer();
+  }
+
+  function stopAndReset() {
+    clearInterval(intervalId);
+    intervalId = null;
+    data.isRunning = false;
+    data.endAt = null;
+    data.phaseIndex = 0;
+    data.pausedRemaining = MODES[data.mode][0].minutes * 60;
+    save();
+    renderTimer();
+    showToast('تمت إعادة الجلسة إلى بدايتها.');
+  }
+
+  function changeMode(mode) {
+    if (data.mode === mode) return;
+    clearInterval(intervalId);
+    intervalId = null;
+    data.isRunning = false;
+    data.endAt = null;
+    data.mode = mode;
+    data.phaseIndex = 0;
+    data.pausedRemaining = MODES[mode][0].minutes * 60;
+    save();
+    renderTimer();
+    openModal(`اخترتِ جلسة ${mode} دقيقة`);
+  }
+
+  function advancePhase() {
+    pauseTimer();
+    const phases = MODES[data.mode];
+
+    if (data.phaseIndex < phases.length - 1) {
+      data.phaseIndex++;
+      data.pausedRemaining = phases[data.phaseIndex].minutes * 60;
+      save();
+      renderTimer();
+      openModal(`المرحلة التالية: ${phases[data.phaseIndex].name}`);
+    } else {
+      stopAndReset();
+      showToast('وصلتِ إلى نهاية مراحل الجلسة. أحسنتِ 🌷');
+    }
+  }
+
+  function renderTasks() {
+    const tasks = currentDay().tasks;
+    const done = tasks.filter(t => t.done).length;
+    $('taskCounter').textContent = `${done} / ${tasks.length}`;
+
+    if (!tasks.length) {
+      $('taskList').innerHTML = '<li class="text-center text-xs text-[#8E7383] py-6">لا توجد مهام بعد. أضيفي أول خطوة ✨</li>';
+      return;
+    }
+
+    $('taskList').innerHTML = tasks.map(task => `
+      <li class="flex items-center justify-between gap-2 p-2.5 rounded-2xl border ${task.done ? 'bg-[#EBF7F2] border-[#9DD8C0]' : 'bg-[#FFFBFD] border-[#F2D8E3]'}">
+        <button type="button" data-task-action="toggle" data-task-id="${safeText(task.id)}" class="flex items-center gap-2.5 text-right flex-1 min-w-0 py-0.5">
+          <span class="text-base shrink-0">${task.done ? '✅' : '⬜'}</span>
+          <span class="text-sm font-semibold truncate ${task.done ? 'line-through text-[#8E7383]' : 'text-[#4B3644]'}">${safeText(task.text)}</span>
+        </button>
+        <button type="button" data-task-action="delete" data-task-id="${safeText(task.id)}" class="text-xs text-[#C2597E] px-2.5 py-1.5 rounded-lg font-bold shrink-0" aria-label="حذف المهمة">✕</button>
+      </li>
+    `).join('');
+  }
+
+  function renderNote() {
+    $('winNoteInput').value = currentDay().note || '';
+  }
+
+  function renderHistory() {
+    const list = $('historyList');
+    const keys = Object.keys(data.days).sort().reverse().slice(0,7);
+
+    if (!keys.length) {
+      list.innerHTML = '<p class="text-xs text-[#8E7383]">سيظهر سجل إنجازاتكِ هنا مع أول جلسة مكتملة.</p>';
+      return;
+    }
+
+    list.innerHTML = keys.map(key => {
+      const record = data.days[key];
+      const done = (record.tasks || []).filter(t => t.done).length;
+      const date = new Date(`${key}T12:00:00`).toLocaleDateString('ar-EG', {
+        weekday:'long', day:'numeric', month:'long'
+      });
+      return `
+        <div class="rounded-2xl border border-[#F4DCE6] bg-[#FFFBFD] p
