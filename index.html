@@ -1252,6 +1252,41 @@
   }
 
   save();
+  function chime(final = false) {
+    if (!data.sound) return;
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audio) audio = new Ctx();
+      if (audio.state === 'suspended') audio.resume();
+
+      const now = audio.currentTime;
+      const notes = final
+        ? [523.25, 659.25, 783.99, 1046.50, 523.25, 659.25, 783.99, 1046.50]
+        : [587.33, 880.00, 587.33, 880.00];
+
+      notes.forEach((freq, i) => {
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        const start = now + (i * 0.22);
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, start);
+
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(final ? 0.9 : 0.65, start + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.6);
+
+        osc.connect(gain);
+        gain.connect(audio.destination);
+
+        osc.start(start);
+        osc.stop(start + 0.65);
+      });
+    } catch (e) {
+      console.warn('Audio context error:', e);
+    }
+  }
 })();
 </script>
 </body>
